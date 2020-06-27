@@ -12,6 +12,6 @@ namespace NewFlower.Models
         public float Temperature { get; set; }
         public float Humidity { get; set; }
         public float Moisture { get; set; }
-        public string TimeMeasurement { get; set; }
+        public DateTime TimeMeasurement { get; set; }
     }
 }
