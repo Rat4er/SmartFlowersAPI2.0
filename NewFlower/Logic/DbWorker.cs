@@ -13,9 +13,11 @@ namespace NewFlower.Logic
 {
     public class DbWorker
     {
-        private string datePattern { get { return "yyyy-MM-dd HH:mm:ss"; } }
+        DataContext db { get { return new DataContext(); } }
+        
         internal Measurements Insert(GetDataModel getModel)
         {
+            DataContext db = this.db;
             Measurements measurement = new Measurements()
             {
                 Id = Guid.NewGuid(),
@@ -25,7 +27,7 @@ namespace NewFlower.Logic
                 Moisture = getModel.Moisture,
                 TimeMeasurement = DateTime.Now
             };
-            DataContext db = new DataContext();
+            
             db.Measurements.Add(measurement);
             try
             {
@@ -52,14 +54,14 @@ namespace NewFlower.Logic
 
         public List<ResponseDataModel> GetAll()
         {
-            DataContext db = new DataContext();
+            
             var measurements = Converter.Convert(db.Measurements);
             return measurements;
         }
 
         public List<ResponseDataModel> GetByFlowerId(GetDataModel getModel)
         {
-            DataContext db = new DataContext();
+            
             var tempMeasurements = db.Measurements
                 .Where(c => c.Flower_Id == getModel.Flower_id)
                 .OrderBy(o => o.TimeMeasurement);
@@ -68,7 +70,7 @@ namespace NewFlower.Logic
 
         public List<ResponseDataModel> GetByTime(GetDataModel getModel)
         {
-            DataContext db = new DataContext();
+            
             var tempMeasurements = db.Measurements
                 .Where(c => c.TimeMeasurement >= getModel.First_data && c.TimeMeasurement <= getModel.Second_data)
                 .OrderBy(o => o.TimeMeasurement);
@@ -77,7 +79,7 @@ namespace NewFlower.Logic
 
         public List<ResponseDataModel> GetByDay(GetDataModel getModel)
         {
-            DataContext db = new DataContext();
+            
             var tempMeasurements = db.Measurements
                 .Where(c => DbFunctions.TruncateTime(c.TimeMeasurement) == getModel.Day.Date)
                 .OrderBy(o => o.TimeMeasurement);
@@ -86,7 +88,7 @@ namespace NewFlower.Logic
 
         public List<ResponseDataModel> GetByFlowerIdAndTime(GetDataModel getModel)
         {
-            DataContext db = new DataContext();
+            
             var tempMeasurements = db.Measurements
                 .Where(c => (c.Flower_Id == getModel.Flower_id) && (c.TimeMeasurement >= getModel.First_data && c.TimeMeasurement <= getModel.Second_data))
                 .OrderBy(o => o.TimeMeasurement);
@@ -95,7 +97,7 @@ namespace NewFlower.Logic
 
         public List<ResponseDataModel> GetByFlowerIdAndDay(GetDataModel getModel)
         {
-            DataContext db = new DataContext();
+            
             var tempMeasurements = db.Measurements
                 .Where(c => (c.Flower_Id == getModel.Flower_id) && (DbFunctions.TruncateTime(c.TimeMeasurement) == getModel.Day.Date))
                 .OrderBy(o => o.TimeMeasurement);
